@@ -8,7 +8,14 @@
 
 import Foundation
 
+protocol CoinManagerDelegate {
+    func didUpdatePrice(price: String, currency: String)
+    func didFailWithError(error: Error)
+}
+
 struct CoinManager {
+    
+    var delegate: CoinManagerDelegate?
     
     let baseURL = "https://rest.coinapi.io/v1/exchangerate/BTC"
     let apiKey = "00E4241E-55C1-4EE7-8FC6-CCCD12C2B4D9"
@@ -27,7 +34,11 @@ struct CoinManager {
                 }
                 
                 if let safeData = data {
-                    let bitcoinPrice = self.parseJSON(safeData)
+                    if let bitcoinPrice = self.parseJSON(safeData){
+                        let priceString = String(format: "%.2f", bitcoinPrice)
+                        self.delegate?.didUpdatePrice(price: priceString, currency: currency)
+                    }
+                        
                 }
                 
             }
