@@ -29,7 +29,7 @@ struct CoinManager {
             
             let task = session.dataTask(with: url) { (data, response, error) in
                 if error != nil {
-                    print(error!)
+                    self.delegate?.didFailWithError(error: error!)
                     return
                 }
                 
@@ -55,7 +55,7 @@ struct CoinManager {
             print(lastPrice)
             return lastPrice
         } catch {
-            print(error)
+            delegate?.didFailWithError(error: error)
             return nil
         }
     }
